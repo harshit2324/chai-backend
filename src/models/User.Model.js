@@ -56,16 +56,16 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.genrateAccessToken = function () {
+userSchema.methods.genrateAccessToken = function () {
   return jwt.sign(
     {
       _id: this.id,
       email: this.email,
-      username: this.fullname,
+      fullname: this.fullname,
       username: this.username,
     },
     process.env.ACCESS_TOKEN_SECRET,
@@ -74,7 +74,8 @@ userSchema.method.genrateAccessToken = function () {
     }
   );
 };
-userSchema.method.genrateRefreshToken = function () {
+
+userSchema.methods.genrateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this.id,
