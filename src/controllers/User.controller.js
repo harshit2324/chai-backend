@@ -222,13 +222,15 @@ const changecurruntuserpassword = asynchandler(async (req, res) => {
   user.password = newpassword;
   await user.save({ validateBeforeSave: false });
 
-  return res.status(200).json(new Apiresponse(200, {}, ""));
+  return res
+    .status(200)
+    .json(new Apiresponse(200, {}, "password changed successfully"));
 });
 
 const getCurrentUser = asynchandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "current user fetched successfully");
+    .json(new Apiresponse(200, req.user, "current user fetched successfully"));
 });
 
 const updateAccountDetails = asynchandler(async (req, res) => {
@@ -238,7 +240,7 @@ const updateAccountDetails = asynchandler(async (req, res) => {
     throw new ApiError(400, "All fields are requred");
   }
 
-  const user = User.findByIdAndUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
